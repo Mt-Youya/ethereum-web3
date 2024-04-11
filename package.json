@@ -21,6 +21,7 @@
     "@types/node": "^20.11.30",
     "@vitejs/plugin-react": "^4.2.1",
     "tailwindcss": "^3.4.1",
+    "unplugin-auto-import": "^0.17.5",
     "vite": "^5.2.6"
   }
 }
