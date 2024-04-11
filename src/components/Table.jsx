@@ -101,10 +101,10 @@ function Table() {
             </div>
             {open && (
                 <div
-                    className={`fixed top-0 flex justify-center items-center bg-[#100F14D9] w-full h-full transition-all ease-in-out`}
+                    className={`fixed top-0 flex justify-center items-center bg-[#100F14D9] w-full h-full transition-all ease-in-out backdrop-saturate-50 backdrop-blur-lg`}
                     onClick={() => setOpen(false)}
                 >
-                    <div className="rounded-xl bg-[#1A1C2F] w-1/4 p-6 text-white"
+                    <div className="rounded-xl bg-[#1A1C2F] w-1/4 p-6 text-white shadow-md"
                          onClick={e => e.stopPropagation()}
                     >
                         <ul className="border-b-2 border-white grid grid-cols-2 gap-3 py-3">
