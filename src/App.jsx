@@ -7,9 +7,7 @@ function App() {
                 <Navbar />
                 <Welcome />
             </div>
-            <Services />
             <Table />
-            <Transactions />
             <Footer />
         </div>
     )

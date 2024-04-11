@@ -48,7 +48,7 @@ function Table() {
                     <div>
                         <ul className={`${tableClass} border-b-2 border-[#302D2E]`}>
                             {["SN", "Description", "MA1", "MA2", "Execution Interval", "Current AmountA", "Current AmountB", "Action"].map(li => (
-                                <li>{li} </li>
+                                <li key={li}>{li} </li>
                             ))}
                         </ul>
                         {orders.map((li, i) => (
@@ -74,7 +74,7 @@ function Table() {
                     <div>
                         <ul className={`${tableClass} border-b-2 border-[#302D2E]`}>
                             {["SN", "Description", "MA1", "MA2", "Execution Interval", "Current AmountA", "Current AmountB", "Action"].map(li => (
-                                <li>{li} </li>
+                                <li key={li}>{li} </li>
                             ))}
                         </ul>
                         {list.map((li, i) => (
