@@ -1,5 +1,6 @@
 import { useEffect, useState, createContext } from "react"
-import { ethers, AbiCoder } from "ethers"
+import { ethers } from "ethers"
+import * as utils from "ethers"
 
 import { contractABI, contractAddress } from "../utils/constants"
 
@@ -43,7 +44,7 @@ export function TransactionsProvider({ children }) {
     async function getMethods(list) {
         const structuredTransactions = []
         for (let i = 0; i < list.length; i++) {
-            const abi = new AbiCoder()
+            const abi = new utils.AbiCoder()
 
             const _transactionList = abi.decode(["uint", "uint", "string", "uint", "uint", "uint", "uint", "uint", "address", "address", "uint", "uint"], availableTransactions[i])
 
