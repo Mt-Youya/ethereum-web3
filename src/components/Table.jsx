@@ -22,7 +22,7 @@ function Table() {
     const [detail, setDetail] = useState(null)
     const tableClass = "grid xl:grid-cols-[50px_120px_100px_100px_minmax(100px,_1fr)_minmax(100px,_1fr)_minmax(200px,_1fr)_100px] xl:gap-4 xl:py-3 xl:gap-2 py-1.5 grid-cols-[30px_minmax(100px,_1fr)_60px_60px_minmax(120px,_1fr)_minmax(120px,_1fr)_minmax(120px,_1fr)_60px]"
 
-    const { handleChange, transactions, orders } = useContext(TransactionContext)
+    const { handleChange, transactions, orders, confirmSend } = useContext(TransactionContext)
 
     function handleDeposit(index) {
         // const item = transactions[index]
@@ -120,15 +120,7 @@ function Table() {
                                 </li>
                             </ul>
                         ))}
-                        {[{
-                            index: 0,
-                            description: "ETH/USD",
-                            MA1: "MA1",
-                            MA2: "MA2",
-                            executionInterval: "Execution Interval",
-                            currentTotalAmountA: "Current AmountA",
-                            currentTotalAmountB: "Current AmountB",
-                        }].map((li, i) => (
+                        {transactions.map((li, i) => (
                             <ul key={li + i} className={`${tableClass} border-b border-[#302D2E]`}>
                                 <li>{li.index}</li>
                                 <li>{li.description}</li>

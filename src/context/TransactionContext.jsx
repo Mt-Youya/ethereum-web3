@@ -100,6 +100,17 @@ export function TransactionsProvider({ children }) {
         }
     }
 
+    async function confirmSend() {
+        try {
+            const account = await createEthereumContract()
+            const value = formData.amount
+            account.testDepositETH(value)
+            getAllOrders()
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     async function checkIfTransactionsExists() {
         try {
             if (ethereum) {
@@ -171,8 +182,6 @@ export function TransactionsProvider({ children }) {
 
     useEffect(() => {
         checkIfWalletIsConnect()
-        // const timer = setInterval(() => {
-        // }, 5000)
     }, [transactionCount])
 
     return (
@@ -187,6 +196,7 @@ export function TransactionsProvider({ children }) {
                 sendTransaction,
                 handleChange,
                 formData,
+                confirmSend,
             }}
         >
             {children}
