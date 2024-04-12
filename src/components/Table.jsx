@@ -1,17 +1,29 @@
-import { useEffect, useState } from "react"
-import { orderList, table } from "../data/welcome"
+import { TransactionContext } from "../context/TransactionContext"
 import "../styles/gradient.css"
+
+
+function Input({ placeholder, name, type, value, handleChange }) {
+    return (
+        <input
+            placeholder={placeholder}
+            type={type}
+            step="0.001"
+            value={value}
+            onChange={(e) => handleChange(e, name)}
+            className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
+        />
+    )
+}
 
 function Table() {
     const [open, setOpen] = useState(false)
-    const [list, setList] = useState([...table])
     const [detail, setDetail] = useState(null)
     const tableClass = "grid xl:grid-cols-[50px_minmax(200px,_1fr)_100px_100px_minmax(200px,_1fr)_minmax(200px,_1fr)_minmax(200px,_1fr)_100px] xl:gap-4 xl:py-3 xl:gap-2 py-1.5 grid-cols-[30px_minmax(100px,_1fr)_60px_60px_minmax(120px,_1fr)_minmax(120px,_1fr)_minmax(120px,_1fr)_60px]"
 
-    const [orders, setOrders] = useState([...orderList])
+    const { handleChange, transactions, orders } = useContext(TransactionContext)
 
     function handleDeposit(index) {
-        const item = list[index]
+        const item = transactions[index]
         setDetail(item)
         setOpen(true)
     }
@@ -77,7 +89,7 @@ function Table() {
                                 <li key={li}>{li} </li>
                             ))}
                         </ul>
-                        {list.map((li, i) => (
+                        {transactions.map((li, i) => (
                             <ul key={li.Description + i} className={`${tableClass} border-b border-[#302D2E]`}>
                                 <li>{i}</li>
                                 <li>{li.Description}</li>
@@ -119,7 +131,7 @@ function Table() {
                             <li>Execution Interval:</li>
                             <li>{detail.ExecutionInterval}</li>
                             <li>Amounts(ETH):</li>
-                            <li>{detail.Amounts}</li>
+                            <li><Input placeholder="ETH" name="amount" type="number" handleChange={handleChange} /></li>
                         </ul>
                         <div className="flex justify-between items-center p-3">
                             <button className="rounded-2xl border border-[#37456E] p-1 " onClick={handleDepositConfirm}

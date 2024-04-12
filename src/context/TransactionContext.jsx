@@ -1,5 +1,5 @@
 import { useEffect, useState, createContext } from "react"
-import { ethers } from "ethers"
+import { ethers, AbiCoder } from "ethers"
 
 import { contractABI, contractAddress } from "../utils/constants"
 
@@ -19,8 +19,9 @@ export function TransactionsProvider({ children }) {
     const [isLoading, setIsLoading] = useState(false)
     const [transactionCount, setTransactionCount] = useState(localStorage.getItem("transactionCount"))
     const [transactions, setTransactions] = useState([])
+    const [orders, setOrders] = useState([])
 
-    const handleChange = (e, name) => {
+    function handleChange(e, name) {
         setformData((prevState) => ({ ...prevState, [name]: e.target.value }))
     }
 
@@ -28,18 +29,48 @@ export function TransactionsProvider({ children }) {
         try {
             const transactionsContract = createEthereumContract()
             const availableTransactions = await transactionsContract.getPriceFeedOrderListBytes(0, 100)
-            console.log(availableTransactions)
 
-            // const structuredTransactions = availableTransactions.map((transaction) => ({
-            //   addressTo: transaction.receiver,
-            //   addressFrom: transaction.sender,
-            //   timestamp: new Date(transaction.timestamp.toNumber() * 1000).toLocaleString(),
-            //   message: transaction.message,
-            //   keyword: transaction.keyword,
-            //   amount: parseInt(transaction.amount._hex) / (10 ** 18)
-            // }));
+            setTransactions(getMethods(availableTransactions))
+            if (ethereum) {
+            } else {
+                console.log("Ethereum is not present")
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
-            setTransactions([availableTransactions])
+    async function getMethods(list) {
+        const structuredTransactions = []
+        for (let i = 0; i < list.length; i++) {
+            const abi = new AbiCoder()
+
+            const _transactionList = abi.decode(["uint", "uint", "string", "uint", "uint", "uint", "uint", "uint", "address", "address", "uint", "uint"], availableTransactions[i])
+
+            structuredTransactions.push({
+                nonce: _transactionList[0].toString(),
+                indexOfPriceFeedOrder: _transactionList[1].toString(),
+                description: _transactionList[2],
+                currentAmountA: _transactionList[3].toString(),
+                currentAmountB: _transactionList[4].toString(),
+                userInitialAmount: _transactionList[5].toString(),
+                userDepositAmountA: _transactionList[6].toString(),
+                userDepositAmountB: _transactionList[7].toString(),
+                priceFeedAddress: _transactionList[8],
+                paramsAddress: _transactionList[9],
+                nonceBefore: _transactionList[10].toString(),
+                nonceAfter: _transactionList[11].toString(),
+            })
+        }
+        return structuredTransactions
+    }
+
+    async function getAllOrders() {
+        try {
+            const transactionsContract = createEthereumContract()
+            const availableTransactions = await transactionsContract.getUserOrderListBytes(accounts[0], 0, 1000000)
+
+            setOrders(getMethods(availableTransactions))
             if (ethereum) {
             } else {
                 console.log("Ethereum is not present")
@@ -58,8 +89,8 @@ export function TransactionsProvider({ children }) {
             console.log("accounts", accounts)
             if (accounts.length) {
                 setCurrentAccount(accounts[0])
-
                 getAllTransactions()
+                getAllOrders()
             } else {
                 console.log("No accounts found")
             }
@@ -139,7 +170,8 @@ export function TransactionsProvider({ children }) {
 
     useEffect(() => {
         checkIfWalletIsConnect()
-        // checkIfTransactionsExists()
+        // const timer = setInterval(() => {
+        // }, 5000)
     }, [transactionCount])
 
     return (
@@ -148,6 +180,7 @@ export function TransactionsProvider({ children }) {
                 transactionCount,
                 connectWallet,
                 transactions,
+                orders,
                 currentAccount,
                 isLoading,
                 sendTransaction,
