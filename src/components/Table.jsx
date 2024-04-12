@@ -1,4 +1,6 @@
 import { TransactionContext } from "../context/TransactionContext"
+
+import Loader from "./Loader"
 import "../styles/gradient.css"
 
 
@@ -10,7 +12,7 @@ function Input({ placeholder, name, type, value, handleChange }) {
             step="0.001"
             value={value}
             onChange={(e) => handleChange(e, name)}
-            className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
+            className="w-full rounded-sm outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
         />
     )
 }
@@ -18,13 +20,21 @@ function Input({ placeholder, name, type, value, handleChange }) {
 function Table() {
     const [open, setOpen] = useState(false)
     const [detail, setDetail] = useState(null)
-    const tableClass = "grid xl:grid-cols-[50px_minmax(200px,_1fr)_100px_100px_minmax(200px,_1fr)_minmax(200px,_1fr)_minmax(200px,_1fr)_100px] xl:gap-4 xl:py-3 xl:gap-2 py-1.5 grid-cols-[30px_minmax(100px,_1fr)_60px_60px_minmax(120px,_1fr)_minmax(120px,_1fr)_minmax(120px,_1fr)_60px]"
+    const tableClass = "grid xl:grid-cols-[50px_120px_100px_100px_minmax(100px,_1fr)_minmax(100px,_1fr)_minmax(200px,_1fr)_100px] xl:gap-4 xl:py-3 xl:gap-2 py-1.5 grid-cols-[30px_minmax(100px,_1fr)_60px_60px_minmax(120px,_1fr)_minmax(120px,_1fr)_minmax(120px,_1fr)_60px]"
 
     const { handleChange, transactions, orders } = useContext(TransactionContext)
 
     function handleDeposit(index) {
-        const item = transactions[index]
-        setDetail(item)
+        // const item = transactions[index]
+        setDetail({
+            index: 0,
+            description: "ETH/USD",
+            MA1: "MA1",
+            MA2: "MA2",
+            executionInterval: "Execution Interval",
+            currentTotalAmountA: "Current AmountA",
+            currentTotalAmountB: "Current AmountB",
+        })
         setOpen(true)
     }
 
@@ -53,32 +63,34 @@ function Table() {
     return (
         <>
             <div className="table-gradient">
-                <div
-                    className="flex w-full justify-center items-center flex-col md:p-14 md:pb-0 pt-10 px-4 text-white"
-                >
-                    <h1 className="text-center md:mb-6 mb-3 text-3xl">My Orders</h1>
-                    <div>
-                        <ul className={`${tableClass} border-b-2 border-[#302D2E]`}>
-                            {["SN", "Description", "MA1", "MA2", "Execution Interval", "Current AmountA", "Current AmountB", "Action"].map(li => (
-                                <li key={li}>{li} </li>
-                            ))}
-                        </ul>
-                        {orders.map((li, i) => (
-                            <ul key={li.Description + i} className={`${tableClass} border-b border-[#302D2E]`}>
-                                <li>{i}</li>
-                                <li>{li.Nonce}</li>
-                                <li>{li.Description}</li>
-                                <li>{li.InitialAmountA}</li>
-                                <li>{li.InitialAmountB}</li>
-                                <li>{li.CurrentAmountA}</li>
-                                <li>{li.CurrentAmountB}</li>
-                                <li>
-                                    <button className="rounded-xl bg-[#2952E3] py-1 px-2"> Withdraw</button>
-                                </li>
+                {orders.length ? (
+                    <div
+                        className="flex w-full justify-center items-center flex-col md:p-14 md:pb-0 pt-10 px-4 text-white"
+                    >
+                        <h1 className="text-center md:mb-6 mb-3 text-3xl">My Orders</h1>
+                        <div>
+                            <ul className={`${tableClass} border-b-2 border-[#302D2E]`}>
+                                {["nonce", "SN", "Description", "AmountA", "AmountB", "userDepositAmountA", "userDepositAmountB", "Action"].map(li => (
+                                    <li key={li}>{li} </li>
+                                ))}
                             </ul>
-                        ))}
+                            {orders.map((li, i) => (
+                                <ul key={li + i} className={`${tableClass} border-b border-[#302D2E]`}>
+                                    <li>{li.nonce}</li>
+                                    <li>{li.indexOfPriceFeedOrder}</li>
+                                    <li>{li.description}</li>
+                                    <li>{li.currentAmountA}</li>
+                                    <li>{li.currentAmountB}</li>
+                                    <li>{li.userDepositAmountA}</li>
+                                    <li>{li.userDepositAmountB}</li>
+                                    <li>
+                                        <button className="rounded-xl bg-[#2952E3] py-1 px-2"> Withdraw</button>
+                                    </li>
+                                </ul>
+                            ))}
+                        </div>
                     </div>
-                </div>
+                ) : <Loader />}
                 <div
                     className="flex w-full justify-center items-center flex-col md:p-14 py-10 px-4 text-white"
                 >
@@ -90,14 +102,41 @@ function Table() {
                             ))}
                         </ul>
                         {transactions.map((li, i) => (
-                            <ul key={li.Description + i} className={`${tableClass} border-b border-[#302D2E]`}>
-                                <li>{i}</li>
-                                <li>{li.Description}</li>
+                            <ul key={li + i} className={`${tableClass} border-b border-[#302D2E]`}>
+                                <li>{li.index}</li>
+                                <li>{li.description}</li>
                                 <li>{li.MA1}</li>
                                 <li>{li.MA2}</li>
-                                <li>{li.ExecutionInterval}</li>
-                                <li>{li.CurrentAmountA}</li>
-                                <li>{li.CurrentAmountB}</li>
+                                <li>{li.executionInterval}</li>
+                                <li>{li.currentTotalAmountA}</li>
+                                <li>{li.currentTotalAmountB}</li>
+                                <li>
+                                    <button
+                                        className="rounded-xl bg-[#2952E3] py-1 px-2"
+                                        onClick={() => handleDeposit(i)}
+                                    >
+                                        Deposit
+                                    </button>
+                                </li>
+                            </ul>
+                        ))}
+                        {[{
+                            index: 0,
+                            description: "ETH/USD",
+                            MA1: "MA1",
+                            MA2: "MA2",
+                            executionInterval: "Execution Interval",
+                            currentTotalAmountA: "Current AmountA",
+                            currentTotalAmountB: "Current AmountB",
+                        }].map((li, i) => (
+                            <ul key={li + i} className={`${tableClass} border-b border-[#302D2E]`}>
+                                <li>{li.index}</li>
+                                <li>{li.description}</li>
+                                <li>{li.MA1}</li>
+                                <li>{li.MA2}</li>
+                                <li>{li.executionInterval}</li>
+                                <li>{li.currentTotalAmountA}</li>
+                                <li>{li.currentTotalAmountB}</li>
                                 <li>
                                     <button
                                         className="rounded-xl bg-[#2952E3] py-1 px-2"
@@ -119,7 +158,7 @@ function Table() {
                     <div className="rounded-xl bg-[#1A1C2F] w-1/4 p-6 text-white shadow-md"
                          onClick={e => e.stopPropagation()}
                     >
-                        <ul className="border-b-2 border-white grid grid-cols-2 gap-3 py-3">
+                        <ul className="border-b-2 border-white grid grid-cols-2 gap-3 py-3 items-center">
                             <li>SN:</li>
                             <li>{detail.SN}</li>
                             <li>Description:</li>
