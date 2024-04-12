@@ -71,11 +71,7 @@ export function TransactionsProvider({ children }) {
             const transactionsContract = createEthereumContract()
             const availableTransactions = await transactionsContract.getUserOrderListBytes(accounts[0], 0, 1000000)
 
-            setOrders(getMethods(availableTransactions))
-            if (ethereum) {
-            } else {
-                console.log("Ethereum is not present")
-            }
+            return setOrders(getMethods(availableTransactions))
         } catch (error) {
             console.log(error)
         }
@@ -105,9 +101,13 @@ export function TransactionsProvider({ children }) {
             const account = await createEthereumContract()
             const value = formData.amount
             account.testDepositETH(value)
-            getAllOrders()
+            setInterval(() => {
+                getAllOrders()
+            }, 5000)
+            return Promise.resolve(true)
         } catch (e) {
             console.log(e)
+            return Promise.reject(false)
         }
     }
 
@@ -117,7 +117,7 @@ export function TransactionsProvider({ children }) {
                 const transactionsContract = createEthereumContract()
                 const currentTransactionCount = await transactionsContract.retrieve()
 
-                window.localStorage.setItem("transactionCount", currentTransactionCount)
+                localStorage.setItem("transactionCount", currentTransactionCount)
             }
         } catch (error) {
             console.log(error)
@@ -133,7 +133,7 @@ export function TransactionsProvider({ children }) {
             const accounts = await ethereum.request({ method: "eth_requestAccounts" })
 
             setCurrentAccount(accounts[0])
-            window.location.reload()
+            location.reload()
         } catch (error) {
             console.log(error)
 
