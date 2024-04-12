@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react"
+import { useEffect, useState, createContext } from "react"
 import { ethers } from "ethers"
 
 import { contractABI, contractAddress } from "../utils/constants"
 
-export const TransactionContext = React.createContext()
+export const TransactionContext = createContext()
 
 const { ethereum } = window
 
 function createEthereumContract() {
-    const provider = new ethers.BrowserProvider(ethereum)
+    const provider = new ethers.providers.Web3Provider(ethereum)
     const signer = provider.getSigner()
     return new ethers.Contract(contractAddress, contractABI, signer)
 }
@@ -28,6 +28,7 @@ export function TransactionsProvider({ children }) {
         try {
             const transactionsContract = createEthereumContract()
             const availableTransactions = await transactionsContract.getPriceFeedOrderListBytes(0, 100)
+            console.log(availableTransactions)
 
             // const structuredTransactions = availableTransactions.map((transaction) => ({
             //   addressTo: transaction.receiver,
@@ -37,8 +38,6 @@ export function TransactionsProvider({ children }) {
             //   keyword: transaction.keyword,
             //   amount: parseInt(transaction.amount._hex) / (10 ** 18)
             // }));
-
-            console.log(availableTransactions)
 
             setTransactions([availableTransactions])
             if (ethereum) {

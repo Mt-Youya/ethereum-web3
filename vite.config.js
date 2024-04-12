@@ -5,7 +5,13 @@ import AutoImport from "unplugin-auto-import/vite"
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [react(), AutoImport()],
+    plugins: [
+        react(),
+        AutoImport({
+            imports: ["react", "react-router", "react-router-dom"],
+            include: [/\.[tj]sx?$/],
+        }),
+    ],
     build: {
         outDir: "dist",
         chunkSizeWarningLimit: 1500,
