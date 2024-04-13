@@ -1,7 +1,6 @@
-import { useEffect, useState, createContext } from "react"
-import { ethers } from "ethers"
-import * as utils from "ethers"
-
+import { createContext, useEffect, useState } from "react"
+import { ethers, utils } from "ethers"
+// import * as utils from "ethers"
 import { contractABI, contractAddress } from "../utils/constants"
 
 export const TransactionContext = createContext()
@@ -27,11 +26,34 @@ export function TransactionsProvider({ children }) {
     }
 
     async function getAllTransactions() {
-        try {
-            const transactionsContract = createEthereumContract()
-            const availableTransactions = await transactionsContract.getPriceFeedOrderListBytes(0, 100)
+        const transactionsContract = createEthereumContract()
+        const availableTransactions = await transactionsContract.getPriceFeedOrderListBytes(0, 100)
 
-            setTransactions(getMethods(availableTransactions))
+        const abi = new utils.AbiCoder()
+        try {
+            const structuredTransactions = []
+            for (let i = 0; i < availableTransactions.length; i++) {
+                const _transactionList = abi.decode(["uint", "string", "address", "address", "address", "address", "uint", "uint", "uint", "uint32", "uint32", "uint32", "uint32", "uint128"], availableTransactions[i])
+                const MAInterval = _transactionList[11]
+
+                structuredTransactions.push({
+                    index: _transactionList[0].toString(),
+                    description: _transactionList[1],
+                    dataFeed: _transactionList[2],
+                    paramsAddress: _transactionList[3],
+                    tokenA: _transactionList[4],
+                    tokenB: _transactionList[5],
+                    initialTotalAmount: _transactionList[6].toString(),
+                    currentTotalAmountA: _transactionList[7].toString(),
+                    currentTotalAmountB: _transactionList[8].toString(),
+                    MA1: (_transactionList[9] / MAInterval).toString(),
+                    MA2: (_transactionList[10] / MAInterval).toString(),
+                    MAInterval: MAInterval.toString(),
+                    executionInterval: _transactionList[12].toString(),
+                    timeStamp: _transactionList[13].toString(),
+                })
+            }
+            setTransactions(structuredTransactions)
             if (ethereum) {
             } else {
                 console.log("Ethereum is not present")
@@ -41,37 +63,33 @@ export function TransactionsProvider({ children }) {
         }
     }
 
-    async function getMethods(list) {
-        const structuredTransactions = []
-        for (let i = 0; i < list.length; i++) {
-            const abi = new utils.AbiCoder()
-
-            const _transactionList = abi.decode(["uint", "uint", "string", "uint", "uint", "uint", "uint", "uint", "address", "address", "uint", "uint"], availableTransactions[i])
-
-            structuredTransactions.push({
-                nonce: _transactionList[0].toString(),
-                indexOfPriceFeedOrder: _transactionList[1].toString(),
-                description: _transactionList[2],
-                currentAmountA: _transactionList[3].toString(),
-                currentAmountB: _transactionList[4].toString(),
-                userInitialAmount: _transactionList[5].toString(),
-                userDepositAmountA: _transactionList[6].toString(),
-                userDepositAmountB: _transactionList[7].toString(),
-                priceFeedAddress: _transactionList[8],
-                paramsAddress: _transactionList[9],
-                nonceBefore: _transactionList[10].toString(),
-                nonceAfter: _transactionList[11].toString(),
-            })
-        }
-        return structuredTransactions
-    }
-
     async function getAllOrders() {
         try {
             const transactionsContract = createEthereumContract()
+            const accounts = await ethereum.request({ method: "eth_accounts" })
             const availableTransactions = await transactionsContract.getUserOrderListBytes(accounts[0], 0, 1000000)
+            const structuredTransactions = []
+            const abi = new utils.AbiCoder()
+            for (let i = 0; i < availableTransactions.length; i++) {
+                const _transactionList = abi.decode(["uint", "uint", "string", "uint", "uint", "uint", "uint", "uint", "address", "address", "uint", "uint"], availableTransactions[i])
 
-            return setOrders(getMethods(availableTransactions))
+                structuredTransactions.push({
+                    nonce: _transactionList[0].toString(),
+                    indexOfPriceFeedOrder: _transactionList[1].toString(),
+                    description: _transactionList[2],
+                    currentAmountA: _transactionList[3].toString(),
+                    currentAmountB: _transactionList[4].toString(),
+                    userInitialAmount: _transactionList[5].toString(),
+                    userDepositAmountA: _transactionList[6].toString(),
+                    userDepositAmountB: _transactionList[7].toString(),
+                    priceFeedAddress: _transactionList[8],
+                    paramsAddress: _transactionList[9],
+                    nonceBefore: _transactionList[10].toString(),
+                    nonceAfter: _transactionList[11].toString(),
+                })
+            }
+
+            return setOrders(structuredTransactions)
         } catch (error) {
             console.log(error)
         }
@@ -83,7 +101,6 @@ export function TransactionsProvider({ children }) {
 
             const accounts = await ethereum.request({ method: "eth_accounts" })
 
-            console.log("accounts", accounts)
             if (accounts.length) {
                 setCurrentAccount(accounts[0])
                 getAllTransactions()
@@ -100,7 +117,9 @@ export function TransactionsProvider({ children }) {
         try {
             const account = await createEthereumContract()
             const value = formData.amount
-            account.testDepositETH(value)
+            const parsedAmount = ethers.utils.parseEther(value)
+
+            account.testDepositETH({ value: parsedAmount })
             setInterval(() => {
                 getAllOrders()
             }, 5000)

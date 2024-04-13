@@ -20,7 +20,7 @@ function Input({ placeholder, name, type, value, handleChange }) {
 function Table() {
     const [open, setOpen] = useState(false)
     const [detail, setDetail] = useState(null)
-    const tableClass = "grid xl:grid-cols-[50px_100px_100px_100px_minmax(100px,_1fr)_minmax(100px,_1fr)_minmax(200px,_1fr)_100px] xl:gap-4 xl:py-3 xl:gap-2 py-1.5 grid-cols-[30px_minmax(100px,_1fr)_60px_60px_minmax(120px,_1fr)_minmax(120px,_1fr)_minmax(120px,_1fr)_60px]"
+    const tableClass = "grid py-1.5 "
 
     const { handleChange, transactions, orders, confirmSend } = useContext(TransactionContext)
 
@@ -38,6 +38,13 @@ function Table() {
         }
     }
 
+    async function handleConfirm() {
+        const res = await confirmSend()
+        console.log(res)
+        if (res){
+            setOpen(false)
+        }
+    }
 
     useEffect(() => {
         window.addEventListener("keyup", handleKeyUp)
@@ -53,13 +60,14 @@ function Table() {
                     >
                         <h1 className="text-center md:mb-6 mb-3 text-3xl">My Orders</h1>
                         <div>
-                            <ul className={`${tableClass} border-b-2 border-[#302D2E]`}>
+                            <ul className={`${tableClass} xl:grid-cols-[60px_50px_120px_minmax(100px,1fr)_minmax(100px,_1fr)_minmax(100px,_1fr)_minmax(200px,_1fr)_100px] grid-cols-[30px_60px_60px_60px_minmax(120px,_1fr)_minmax(120px,_1fr)_minmax(120px,_1fr)_60px] border-b-2 border-[#302D2E]`}>
                                 {["nonce", "SN", "Description", "AmountA", "AmountB", "userDepositAmountA", "userDepositAmountB", "Action"].map(li => (
                                     <li key={li}>{li} </li>
                                 ))}
                             </ul>
                             {orders.map((li, i) => (
-                                <ul key={li + i} className={`${tableClass} border-b border-[#302D2E]`}>
+                                <ul key={li + i}
+                                    className={`${tableClass} xl:grid-cols-[60px_50px_120px_minmax(100px,1fr)_minmax(100px,_1fr)_minmax(100px,_1fr)_minmax(200px,_1fr)_100px] grid-cols-[30px_60px_60px_60px_minmax(120px,_1fr)_minmax(120px,_1fr)_minmax(120px,_1fr)_60px] border-b border-[#302D2E]`}>
                                     <li>{li.nonce}</li>
                                     <li>{li.indexOfPriceFeedOrder}</li>
                                     <li>{li.description}</li>
@@ -80,32 +88,14 @@ function Table() {
                 >
                     <h1 className="text-center md:mb-6 mb-3 text-3xl">Total FeedData Orders</h1>
                     <div>
-                        <ul className={`${tableClass} border-b-2 border-[#302D2E]`}>
+                        <ul className={`${tableClass}  xl:grid-cols-[50px_100px_60px_60px_minmax(120px,_1fr)_minmax(120px,_1fr)_minmax(200px,_1fr)_100px] grid-cols-[30px_100px_100px_100px_100px_minmax(120px,_1fr)_minmax(120px,_1fr)_60px] border-b-2 border-[#302D2E]`}>
                             {["SN", "Description", "MA1", "MA2", "Execution Interval", "Current AmountA", "Current AmountB", "Action"].map(li => (
                                 <li key={li}>{li} </li>
                             ))}
                         </ul>
                         {transactions.map((li, i) => (
-                            <ul key={li + i} className={`${tableClass} border-b border-[#302D2E]`}>
-                                <li>{li.index}</li>
-                                <li>{li.description}</li>
-                                <li>{li.MA1}</li>
-                                <li>{li.MA2}</li>
-                                <li>{li.executionInterval}</li>
-                                <li>{li.currentTotalAmountA}</li>
-                                <li>{li.currentTotalAmountB}</li>
-                                <li>
-                                    <button
-                                        className="rounded-xl bg-[#2952E3] py-1 px-2"
-                                        onClick={() => handleDeposit(i)}
-                                    >
-                                        Deposit
-                                    </button>
-                                </li>
-                            </ul>
-                        ))}
-                        {transactions.map((li, i) => (
-                            <ul key={li + i} className={`${tableClass} border-b border-[#302D2E]`}>
+                            <ul key={li + i}
+                                className={`${tableClass} xl:grid-cols-[50px_100px_60px_60px_minmax(120px,_1fr)_minmax(120px,_1fr)_minmax(200px,_1fr)_100px] grid-cols-[30px_100px_100px_100px_100px_minmax(120px,_1fr)_minmax(120px,_1fr)_60px] border-b border-[#302D2E]`}>
                                 <li>{li.index}</li>
                                 <li>{li.description}</li>
                                 <li>{li.MA1}</li>
@@ -149,7 +139,7 @@ function Table() {
                             <li><Input placeholder="ETH" name="amount" type="number" handleChange={handleChange} /></li>
                         </ul>
                         <div className="flex justify-between items-center p-3">
-                            <button className="rounded-2xl border border-[#37456E] p-1 " onClick={confirmSend}
+                            <button className="rounded-2xl border border-[#37456E] p-1 " onClick={() => handleConfirm()}
                             >Deposit
                             </button>
                             <button className="rounded-2xl border border-[#37456E] p-1 " onClick={() => setOpen(false)}
