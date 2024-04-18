@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react"
-import { ethers, utils } from "ethers"
+import { ethers, AbiCoder } from "ethers"
 // import * as utils from "ethers"
 import { contractABI, contractAddress } from "../utils/constants"
 
@@ -7,9 +7,9 @@ export const TransactionContext = createContext()
 
 const { ethereum } = window
 
-function createEthereumContract() {
-    const provider = new ethers.providers.Web3Provider(ethereum)
-    const signer = provider.getSigner()
+async function createEthereumContract() {
+    const provider = new ethers.BrowserProvider(ethereum)
+    const signer = await provider.getSigner()
     return new ethers.Contract(contractAddress, contractABI, signer)
 }
 
@@ -29,7 +29,7 @@ export function TransactionsProvider({ children }) {
         const transactionsContract = createEthereumContract()
         const availableTransactions = await transactionsContract.getPriceFeedOrderListBytes(0, 100)
 
-        const abi = new utils.AbiCoder()
+        const abi = new AbiCoder()
         try {
             const structuredTransactions = []
             for (let i = 0; i < availableTransactions.length; i++) {
