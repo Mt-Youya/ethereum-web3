@@ -7,7 +7,6 @@ function App() {
         <div className="min-h-screen">
             <LocationsProvider>
                 <div className="gradient-bg-welcome">
-                    <Navbar />
                     <Welcome />
                 </div>
                 <Map />
