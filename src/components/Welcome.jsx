@@ -1,27 +1,11 @@
-import React, { useContext, useEffect, useState } from "react"
 import { AiFillPlayCircle } from "react-icons/ai"
-import { SiEthereum } from "react-icons/si"
-import { BsInfoCircle } from "react-icons/bs"
 
 import { TransactionContext } from "../context/TransactionContext"
-import { shortenAddress } from "../utils/shortenAddress"
-import { Loader } from "."
-
-const companyCommonStyles = "min-h-[70px] sm:px-0 px-2 sm:min-w-[120px] flex justify-center items-center border-[0.5px] border-gray-400 text-sm font-light text-white"
-
-const Input = ({ placeholder, name, type, value, handleChange }) => (
-    <input
-        placeholder={placeholder}
-        type={type}
-        step="0.0001"
-        value={value}
-        onChange={(e) => handleChange(e, name)}
-        className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
-    />
-)
+import { LocationContext } from "../context/LocationsContext"
 
 function Welcome() {
     const { currentAccount, connectWallet } = useContext(TransactionContext)
+    const { position } = useContext(LocationContext)
 
     return (
         <div className="flex w-full justify-center items-center min-h-64">
@@ -37,7 +21,17 @@ function Welcome() {
                         </p>
                     </button>
                 )
-                : <span className="text-white w-24 truncate"> {currentAccount}  </span>
+                : (
+                    <h1 className="text-3xl text-white font-semibold">
+                        Welcome, {currentAccount} <br />
+                        {position && (
+                            <span>
+                                Latitude: {position.lat} <br />
+                                Longitude: {position.lng}
+                            </span>
+                        )}
+                    </h1>
+                )
             }
         </div>
     )

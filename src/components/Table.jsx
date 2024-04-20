@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import "../styles/gradient.css"
 import { TransactionContext } from "../context/TransactionContext"
+import { LocationContext } from "../context/LocationsContext"
 
 function Table() {
     const [open, setOpen] = useState(false)
@@ -8,6 +9,7 @@ function Table() {
     const tableClass = "grid xl:grid-cols-[50px_minmax(200px,_1fr)_100px_100px_minmax(200px,_1fr)_minmax(200px,_1fr)_minmax(200px,_1fr)_100px] xl:gap-4 xl:py-3 xl:gap-2 py-1.5 grid-cols-[30px_minmax(100px,_1fr)_60px_60px_minmax(120px,_1fr)_minmax(120px,_1fr)_minmax(120px,_1fr)_60px]"
 
     const { transactions, myTransactions, onSignIn } = useContext(TransactionContext)
+    const { position } = useContext(LocationContext)
 
     function handleCheckIn(index) {
         const item = transactions[index]
@@ -23,8 +25,12 @@ function Table() {
         }
     }
 
-    function handleCheckInConfirm() {
-        // onSignIn()
+    async function handleCheckInConfirm() {
+        if (position) {
+            await onSignIn(detail.sn, parseInt(position.latitude * 1000000), parseInt(position.longitude * 1000000))
+        } else {
+            alert("Please enable location service")
+        }
         setOpen(false)
     }
 
@@ -42,8 +48,8 @@ function Table() {
                     <h1 className="text-center md:mb-6 mb-3 text-3xl">My Orders</h1>
                     <div className="min-h-52">
                         <ul className={`${tableClass} border-b-2 border-[#302D2E]`}>
-                            {["SN", "Description", "City", "Latitude", "Longitude", "StartTime(UTC)", "EndTime(UTC)", "Action"].map(li => (
-                                <li key={li}>{li} </li>
+                            {["SN", "Description", "City", "Latitude", "Longitude", "StartTime(UTC)", "EndTime(UTC)"].map(li => (
+                                <li key={li}>{li}</li>
                             ))}
                         </ul>
                         {myTransactions.map((li, i) => (
@@ -55,7 +61,6 @@ function Table() {
                                 <li>{li.latitude}</li>
                                 <li>{li.startTime}</li>
                                 <li>{li.endTime}</li>
-
                             </ul>
                         ))}
                     </div>
@@ -77,14 +82,15 @@ function Table() {
                                 <li>{li.latitude}</li>
                                 <li>{li.startTime}</li>
                                 <li>{li.endTime}</li>
-                                <li>
-                                    <button
-                                        className={`rounded-xl bg-[#2952E3] py-1 px-2 ${li.checked && "text-gray-500"}`}
-                                        disabled={!li.checked}
-                                    >
-                                        Check-In
-                                    </button>
-                                </li>
+                                {li.checked === "true" && (
+                                    <li>
+                                        <button className={`rounded-xl bg-[#2952E3] py-1 px-2`}
+                                                onClick={() => handleCheckIn(i)}
+                                        >
+                                            Check-In
+                                        </button>
+                                    </li>
+                                )}
                             </ul>
                         ))}
                     </div>
@@ -117,10 +123,10 @@ function Table() {
                             <li>{detail.endTime}</li>
                         </ul>
                         <div className="flex justify-between items-center p-3">
-                            <button className="rounded-2xl border border-[#37456E] p-1 " onClick={handleCheckInConfirm}>
+                            <button className="rounded-2xl border border-[#37456E] p-1" onClick={handleCheckInConfirm}>
                                 Check In
                             </button>
-                            <button className="rounded-2xl border border-[#37456E] p-1 " onClick={() => setOpen(false)}>
+                            <button className="rounded-2xl border border-[#37456E] p-1" onClick={() => setOpen(false)}>
                                 Cancel
                             </button>
                         </div>

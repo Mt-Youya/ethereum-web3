@@ -1,6 +1,5 @@
 import AMapLoader from "@amap/amap-jsapi-loader"
 import Loader from "./Loader"
-import { useState } from "react"
 
 function Map() {
     const [loading, setLoading] = useState(true)
@@ -78,7 +77,7 @@ function Map() {
                     <p>{error.message}</p>
                     <p>errorCode:{error.code}</p>
                 </div>
-            ) : <div id="container" style={{ height: "800px" }}></div>}
+            ) : <div id="container" style={{ height: "400px" }}></div>}
         </div>
     )
 }
