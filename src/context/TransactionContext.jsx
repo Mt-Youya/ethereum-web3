@@ -34,17 +34,18 @@ export function TransactionsProvider({ children }) {
             const list = []
             console.log("transactions", transactions)
             for (const transaction of transactions) {
-                const transactor = abi.decode(["uint32", "uint64", "uint64", "uint32", "uint32", "uint32", "address", "string", "string"], transaction)
+                const transactor = abi.decode(["uint32", "uint64", "uint64", "uint32", "uint32", "uint32", "address", "string", "string", "bool"], transaction)
                 list.push({
                     sn: transactor[0].toString(),
-                    startTime: dayjs(new Date(parseInt(transactor[1].toString()) * 1000)).format(" YYYY-MM-DD HH:mm:ss"),
-                    endTime: dayjs(new Date(parseInt(transactor[2].toString()) * 1000)).format(" YYYY-MM-DD HH:mm:ss"),
+                    startTime: dayjs(new Date(parseInt(transactor[1].toString()) * 1000)).format("YYYY-MM-DD HH:mm:ss"),
+                    endTime: dayjs(new Date(parseInt(transactor[2].toString()) * 1000)).format("YYYY-MM-DD HH:mm:ss"),
                     longitude: parseFloat(transactor[3].toString()) / 1000000,
                     latitude: parseFloat(transactor[4].toString()) / 1000000,
                     deviation: parseFloat(transactor[5].toString()) / 1000000,
                     owner: transactor[6],
                     description: transactor[7],
                     city: transactor[8],
+                    ifCheckin: transactor[9],
                 })
             }
             setTransactions(list)
@@ -64,8 +65,8 @@ export function TransactionsProvider({ children }) {
                 const transactor = abi.decode(["uint32", "uint64", "uint64", "uint32", "uint32", "uint32", "address", "string", "string"], transaction)
                 list.push({
                     sn: transactor[0].toString(),
-                    startTime: dayjs(new Date(parseInt(transactor[1].toString()) * 1000)).format(" YYYY-MM-DD HH:mm:ss"),
-                    endTime: dayjs(new Date(parseInt(transactor[2].toString()) * 1000)).format(" YYYY-MM-DD HH:mm:ss"),
+                    startTime: dayjs(new Date(parseInt(transactor[1].toString()) * 1000)).format("YYYY-MM-DD HH:mm:ss"),
+                    endTime: dayjs(new Date(parseInt(transactor[2].toString()) * 1000)).format("YYYY-MM-DD HH:mm:ss"),
                     longitude: parseFloat(transactor[3].toString()) / 1000000,
                     latitude: parseFloat(transactor[4].toString()) / 1000000,
                     deviation: parseFloat(transactor[5].toString()) / 1000000,
