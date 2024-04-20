@@ -6,7 +6,7 @@ import { LocationContext } from "../context/LocationsContext"
 function Table() {
     const [open, setOpen] = useState(false)
     const [detail, setDetail] = useState(null)
-    const tableClass = "grid xl:grid-cols-[50px_minmax(200px,_1fr)_100px_100px_minmax(200px,_1fr)_minmax(200px,_1fr)_minmax(200px,_1fr)_100px] xl:gap-4 xl:py-3 xl:gap-2 py-1.5 grid-cols-[30px_minmax(100px,_1fr)_60px_60px_minmax(120px,_1fr)_minmax(120px,_1fr)_minmax(120px,_1fr)_60px]"
+    const tableClass = "grid xl:grid-cols-[30px_minmax(200px,1fr)_100px_100px_100px_minmax(200px,_1fr)_minmax(200px,1fr)_100px] xl:gap-4 xl:py-3 xl:gap-2 py-1.5 grid-cols-[30px_minmax(100px,1fr)_60px_60px_60px_minmax(120px,1fr)_minmax(120px,1fr)_60px]"
 
     const { transactions, myTransactions, onCheckIn } = useContext(TransactionContext)
     const { position } = useContext(LocationContext)
@@ -57,8 +57,8 @@ function Table() {
                                 <li>{li.sn}</li>
                                 <li>{li.description}</li>
                                 <li>{li.city}</li>
-                                <li>{li.longitude}</li>
                                 <li>{li.latitude}</li>
+                                <li>{li.longitude}</li>
                                 <li>{li.startTime}</li>
                                 <li>{li.endTime}</li>
                             </ul>
@@ -78,8 +78,8 @@ function Table() {
                                 <li>{li.sn}</li>
                                 <li>{li.description}</li>
                                 <li>{li.city}</li>
-                                <li>{li.longitude}</li>
                                 <li>{li.latitude}</li>
+                                <li>{li.longitude}</li>
                                 <li>{li.startTime}</li>
                                 <li>{li.endTime}</li>
                                 {!li.checked && (
@@ -98,7 +98,7 @@ function Table() {
             </div>
             {open && (
                 <div
-                    className={`fixed top-0 flex justify-center items-center bg-[#100F14D9] w-full h-full transition-all ease-in-out backdrop-saturate-50 backdrop-blur-lg`}
+                    className={`fixed top-0 flex justify-center items-center bg-[#100F14D9] w-full h-full transition-all ease-in-out backdrop-saturate-50 backdrop-blur-lg z-[161]`}
                     onClick={() => setOpen(false)}
                 >
                     <div className="rounded-xl bg-[#1A1C2F] w-1/4 p-6 text-white shadow-md"

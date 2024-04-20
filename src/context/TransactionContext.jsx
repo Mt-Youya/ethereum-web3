@@ -21,6 +21,9 @@ export function TransactionsProvider({ children }) {
     const [transactionCount, setTransactionCount] = useState(localStorage.getItem("transactionCount"))
     const [transactions, setTransactions] = useState([])
     const [myTransactions, setMyTransactions] = useState([])
+    const reloadRef = useRef({
+        myLen: 0,
+    })
 
     function handleChange(e, name) {
         setformData((prevState) => ({ ...prevState, [name]: e.target.value }))
@@ -29,8 +32,8 @@ export function TransactionsProvider({ children }) {
     async function getAllTransactions() {
         const abi = new AbiCoder()
         try {
-            const transactionsContract = await createEthereumContract()
-            const transactions = await transactionsContract.getAllCheckinPoints()
+            const contract = await createEthereumContract()
+            const transactions = await contract.getAllCheckinPoints()
             const list = []
             console.log("transactions", transactions)
             for (const transaction of transactions) {
@@ -54,11 +57,12 @@ export function TransactionsProvider({ children }) {
         }
     }
 
+
     async function getMyTransactions() {
         const abi = new AbiCoder()
         try {
-            const transactionsContract = await createEthereumContract()
-            const transactions = await transactionsContract.getCheckinInfosByAddress()
+            const contract = await createEthereumContract()
+            const transactions = await contract.getCheckinInfosByAddress()
             const list = []
             console.log("transactions", transactions)
             for (const transaction of transactions) {
@@ -75,24 +79,39 @@ export function TransactionsProvider({ children }) {
                     city: transactor[8],
                 })
             }
+            console.log(list)
             setMyTransactions(list)
+            reloadRef.current.myLen = list.length
         } catch (e) {
             console.log(e)
         }
     }
 
     async function onCheckIn(nonce, longitude, latitude) {
+        let len = reloadRef.current.myLen
         try {
             if (ethereum) {
-                const transactionsContract = await createEthereumContract()
+                const contract = await createEthereumContract()
                 await ethereum.request({ method: "eth_accounts" })
-                await transactionsContract.checkin(nonce, parseInt(longitude * 1000000), parseInt(latitude * 1000000))
+                await contract.checkin(nonce, parseInt(longitude * 1000000), parseInt(latitude * 1000000))
+                const timer = setInterval(async () => {
+                    await getMyTransactions()
+                    if (len !== myTransactions.length) {
+                        clearInterval(timer)
+                    }
+                }, 2000)
             } else {
                 console.log("Ethereum is not present")
             }
         } catch (error) {
             console.log(error)
         }
+    }
+
+    function isInRange(lat, lng, target) {
+        const { latitude, longitude } = target
+
+        return false
     }
 
     async function checkIfWalletIsConnect() {
@@ -106,8 +125,8 @@ export function TransactionsProvider({ children }) {
             if (accounts.length) {
                 setCurrentAccount(accounts[0])
 
-                getAllTransactions()
-                getMyTransactions()
+                await getAllTransactions()
+                await getMyTransactions()
             } else {
                 console.log("No accounts found")
             }
