@@ -1,6 +1,10 @@
 import AMapLoader from "@amap/amap-jsapi-loader"
+import Loader from "./Loader"
+import { useState } from "react"
 
 function Map() {
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
     const contextRef = useRef(null)
 
     function getLocation() {
@@ -19,9 +23,12 @@ function Map() {
                             lng: position.coords.longitude,
                         }
                         resolve(pos)
+                        setError(null)
+                        setLoading(false)
                     },
                     error => {
-                        console.log(error)
+                        setError(error)
+                        setLoading(false)
                         reject(error)
                     },
                     options,
@@ -30,41 +37,49 @@ function Map() {
         }
     }
 
-    useEffect(() => {
-        AMapLoader.load({
-            key: "b6bba4c9f64ffddf4cabcd1454df975f",
-            version: "2.0",
-            plugins: ["AMap.Scale"],
-        })
-            .then(async (AMap) => {
-                const pos = await getLocation()
-                console.log(pos, "pos")
-                contextRef.current = new AMap.Map("container", {
-                    // 设置地图容器id
-                    viewMode: "3D", // 是否为3D地图模式
-                    zoom: 11, // 初始化地图级别
-                    center: [pos.lng, pos.lat], // 初始化地图中心点位置
-                })
-                const marker = new AMap.Marker({
-                    position: new AMap.LngLat(pos.lng, pos.lat),
-                    title: "上海",
-                })
-                contextRef.current.add(marker)
+    async function init() {
+        try {
+            const position = await getLocation()
+            const params = {
+                key: "b6bba4c9f64ffddf4cabcd1454df975f",
+                version: "2.0",
+                plugins: ["AMap.Scale"],
+            }
+            const AMap = await AMapLoader.load(params)
+            contextRef.current = new AMap.Map("container", {
+                viewMode: "3D",
+                zoom: 11,
+                center: [position.lng, position.lat],
             })
-            .catch((e) => {
-                console.log(e)
+            const marker = new AMap.Marker({
+                position: new AMap.LngLat(position.lng, position.lat),
+                title: "上海",
             })
-
-        return () => {
-            contextRef.current?.destroy()
+            contextRef.current.add(marker)
+        } catch (e) {
+            console.log(e)
         }
+    }
+
+    useEffect(() => {
+        init()
+        return () => contextRef.current?.destroy()
     }, [])
 
+    if (loading) {
+        return <Loader />
+    }
+
     return (
-        <div
-            id="container"
-            style={{ height: "800px" }}
-        ></div>
+        <div>
+            {error ? (
+                <div className="text-center my-5">
+                    <h1>Failed to get geographic location longitude and latitude</h1>
+                    <p>{error.message}</p>
+                    <p>errorCode:{error.code}</p>
+                </div>
+            ) : <div id="container" style={{ height: "800px" }}></div>}
+        </div>
     )
 }
 
