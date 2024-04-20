@@ -2,7 +2,7 @@ import { useEffect, useState, createContext } from "react"
 import { ethers, AbiCoder } from "ethers"
 
 import { contractABI, contractAddress } from "../utils/constants"
-import * as dayjs from "dayjs"
+import dayjs from "dayjs"
 
 export const TransactionContext = createContext()
 
@@ -45,7 +45,7 @@ export function TransactionsProvider({ children }) {
                     owner: transactor[6],
                     description: transactor[7],
                     city: transactor[8],
-                    ifCheckin: transactor[9],
+                    checked: transactor[9],
                 })
             }
             setTransactions(list)

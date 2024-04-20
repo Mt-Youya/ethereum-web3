@@ -9,7 +9,7 @@ function Table() {
 
     const { transactions, myTransactions, onSignIn } = useContext(TransactionContext)
 
-    function handleDeposit(index) {
+    function handleCheckIn(index) {
         const item = transactions[index]
         setDetail(item)
         setOpen(true)
@@ -23,7 +23,7 @@ function Table() {
         }
     }
 
-    function handleDepositConfirm() {
+    function handleCheckInConfirm() {
         // onSignIn()
         setOpen(false)
     }
@@ -56,7 +56,12 @@ function Table() {
                                 <li>{li.startTime}</li>
                                 <li>{li.endTime}</li>
                                 <li>
-                                    <button className="rounded-xl bg-[#2952E3] py-1 px-2"> Check-In</button>
+                                    <button
+                                        className={`rounded-xl bg-[#2952E3] py-1 px-2 ${li.checked && "text-gray-500"}`}
+                                        disabled={!li.checked}
+                                    >
+                                        Check-In
+                                    </button>
                                 </li>
                             </ul>
                         ))}
@@ -82,7 +87,7 @@ function Table() {
                                 <li>
                                     <button
                                         className="rounded-xl bg-[#2952E3] py-1 px-2"
-                                        onClick={() => handleDeposit(i)}
+                                        onClick={() => handleCheckIn(i)}
                                     >
                                         Deposit
                                     </button>
@@ -119,7 +124,7 @@ function Table() {
                             <li>{detail.endTime}</li>
                         </ul>
                         <div className="flex justify-between items-center p-3">
-                            <button className="rounded-2xl border border-[#37456E] p-1 " onClick={handleDepositConfirm}>
+                            <button className="rounded-2xl border border-[#37456E] p-1 " onClick={handleCheckInConfirm}>
                                 Deposit
                             </button>
                             <button className="rounded-2xl border border-[#37456E] p-1 " onClick={() => setOpen(false)}>
