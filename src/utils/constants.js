@@ -1,3 +1,3 @@
 export { abi as contractABI } from "./Transactions.json"
 
-export const contractAddress = "0x7ed8447B5FF06A8b16f6934BB025E668122D6CD9"
+export const contractAddress = "0x8889AEe8EA29DA8b07C6A3e69e5A5a0F1208286d"

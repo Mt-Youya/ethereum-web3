@@ -1,15 +1,16 @@
 import { useEffect, useState, createContext } from "react"
-import { ethers } from "ethers"
+import { ethers, AbiCoder } from "ethers"
 
 import { contractABI, contractAddress } from "../utils/constants"
+import * as dayjs from "dayjs"
 
 export const TransactionContext = createContext()
 
 const { ethereum } = window
 
-function createEthereumContract() {
-    const provider = new ethers.providers.Web3Provider(ethereum)
-    const signer = provider.getSigner()
+async function createEthereumContract() {
+    const provider = new ethers.BrowserProvider(ethereum)
+    const signer = await provider.getSigner()
     return new ethers.Contract(contractAddress, contractABI, signer)
 }
 
@@ -19,28 +20,73 @@ export function TransactionsProvider({ children }) {
     const [isLoading, setIsLoading] = useState(false)
     const [transactionCount, setTransactionCount] = useState(localStorage.getItem("transactionCount"))
     const [transactions, setTransactions] = useState([])
+    const [myTransactions, setMyTransactions] = useState([])
 
-    const handleChange = (e, name) => {
+    function handleChange(e, name) {
         setformData((prevState) => ({ ...prevState, [name]: e.target.value }))
     }
 
     async function getAllTransactions() {
+        const abi = new AbiCoder()
         try {
-            const transactionsContract = createEthereumContract()
-            const availableTransactions = await transactionsContract.getPriceFeedOrderListBytes(0, 100)
-            console.log(availableTransactions)
+            const transactionsContract = await createEthereumContract()
+            const transactions = await transactionsContract.getAllCheckinPoints()
+            const list = []
+            console.log('transactions',transactions)
+            // for (const transaction of transactions) {
+            //     const transactor = abi.decode(["uint32", "uint64", "uint64", "uint32", "uint32", "uint32", "address", "string", "string"], transaction)
+            //     list.push({
+            //         sn: transactor[0].toString(),
+            //         startTime: dayjs(new Date(parseInt(transactor[1].toString()) * 1000)).format(" YYYY-MM-DD HH:mm:ss"),
+            //         endTime: dayjs(new Date(parseInt(transactor[2].toString()) * 1000)).format(" YYYY-MM-DD HH:mm:ss"),
+            //         longitude: parseFloat(transactor[3].toString()) / 1000000,
+            //         latitude: parseFloat(transactor[4].toString()) / 1000000,
+            //         deviation: parseFloat(transactor[5].toString()) / 1000000,
+            //         owner: transactor[6],
+            //         description: transactor[7],
+            //         city: transactor[8],
+            //     })
+            // } 
+            // setTransactions(list)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
-            // const structuredTransactions = availableTransactions.map((transaction) => ({
-            //   addressTo: transaction.receiver,
-            //   addressFrom: transaction.sender,
-            //   timestamp: new Date(transaction.timestamp.toNumber() * 1000).toLocaleString(),
-            //   message: transaction.message,
-            //   keyword: transaction.keyword,
-            //   amount: parseInt(transaction.amount._hex) / (10 ** 18)
-            // }));
+    async function getMyTransactions() {
+        const abi = new AbiCoder()
+        try {
+            const transactionsContract = await createEthereumContract()
+            const transactions = await transactionsContract.getCheckinInfosByAddress()
+            const list = []
+            console.log('transactions',transactions)
+            // for (const transaction of transactions) {
+            //     const transactor = abi.decode(["uint32", "uint64", "uint64", "uint32", "uint32", "uint32", "address", "string", "string"], transaction)
+            //     list.push({
+            //         sn: transactor[0].toString(),
+            //         startTime: dayjs(new Date(parseInt(transactor[1].toString()) * 1000)).format(" YYYY-MM-DD HH:mm:ss"),
+            //         endTime: dayjs(new Date(parseInt(transactor[2].toString()) * 1000)).format(" YYYY-MM-DD HH:mm:ss"),
+            //         longitude: parseFloat(transactor[3].toString()) / 1000000,
+            //         latitude: parseFloat(transactor[4].toString()) / 1000000,
+            //         deviation: parseFloat(transactor[5].toString()) / 1000000,
+            //         owner: transactor[6],
+            //         description: transactor[7],
+            //         city: transactor[8],
+            //     })
+            // }
+            // setMyTransactions(list)
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
-            setTransactions([availableTransactions])
+    async function onSignIn(nonce, longitude, latitude) {
+        try {
             if (ethereum) {
+                // console.log("availableTransactions: ");
+                const transactionsContract = await createEthereumContract()
+                await ethereum.request({ method: "eth_accounts" })
+                await transactionsContract.checkin(nonce, parseInt(longitude * 1000000), parseInt(latitude * 1000000))
             } else {
                 console.log("Ethereum is not present")
             }
@@ -51,7 +97,8 @@ export function TransactionsProvider({ children }) {
 
     async function checkIfWalletIsConnect() {
         try {
-            if (!ethereum) return alert("Please install MetaMask.")
+            // if (!ethereum) return alert("Please install MetaMask.")
+            if (!ethereum) return
 
             const accounts = await ethereum.request({ method: "eth_accounts" })
 
@@ -60,6 +107,7 @@ export function TransactionsProvider({ children }) {
                 setCurrentAccount(accounts[0])
 
                 getAllTransactions()
+                getMyTransactions()
             } else {
                 console.log("No accounts found")
             }
@@ -68,68 +116,15 @@ export function TransactionsProvider({ children }) {
         }
     }
 
-    async function checkIfTransactionsExists() {
-        try {
-            if (ethereum) {
-                const transactionsContract = createEthereumContract()
-                const currentTransactionCount = await transactionsContract.retrieve()
-
-                window.localStorage.setItem("transactionCount", currentTransactionCount)
-            }
-        } catch (error) {
-            console.log(error)
-
-            throw new Error("No ethereum object")
-        }
-    }
-
     async function connectWallet() {
         try {
             if (!ethereum) return alert("Please install MetaMask.")
 
             const accounts = await ethereum.request({ method: "eth_requestAccounts" })
+            console.log(accounts)
 
             setCurrentAccount(accounts[0])
-            window.location.reload()
-        } catch (error) {
-            console.log(error)
-
-            throw new Error("No ethereum object")
-        }
-    }
-
-    async function sendTransaction() {
-        try {
-            if (ethereum) {
-                const { addressTo, amount, keyword, message } = formData
-                const transactionsContract = createEthereumContract()
-                const parsedAmount = ethers.utils.parseEther(amount)
-
-                await ethereum.request({
-                    method: "eth_sendTransaction",
-                    params: [{
-                        from: currentAccount,
-                        to: addressTo,
-                        gas: "0x5208",
-                        value: parsedAmount._hex,
-                    }],
-                })
-
-                const transactionHash = await transactionsContract.store(parsedAmount)
-
-                setIsLoading(true)
-                console.log(`Loading - ${transactionHash.hash}`)
-                await transactionHash.wait()
-                console.log(`Success - ${transactionHash.hash}`)
-                setIsLoading(false)
-
-                const transactionsCount = await transactionsContract.retrieve()
-
-                setTransactionCount(transactionsCount.toString())
-                // window.location.reload();
-            } else {
-                console.log("No ethereum object")
-            }
+            location.reload()
         } catch (error) {
             console.log(error)
 
@@ -139,7 +134,6 @@ export function TransactionsProvider({ children }) {
 
     useEffect(() => {
         checkIfWalletIsConnect()
-        // checkIfTransactionsExists()
     }, [transactionCount])
 
     return (
@@ -150,9 +144,10 @@ export function TransactionsProvider({ children }) {
                 transactions,
                 currentAccount,
                 isLoading,
-                sendTransaction,
                 handleChange,
                 formData,
+                onSignIn,
+                myTransactions,
             }}
         >
             {children}

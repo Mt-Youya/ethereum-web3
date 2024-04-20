@@ -6,73 +6,147 @@
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "_initialOwner",
-          "type": "address"
+          "internalType": "uint64",
+          "name": "timeStart",
+          "type": "uint64"
         },
         {
-          "internalType": "address",
-          "name": "_uniswapV2Router",
-          "type": "address"
+          "internalType": "uint64",
+          "name": "timeEnd",
+          "type": "uint64"
         },
         {
-          "internalType": "address",
-          "name": "_LINK",
-          "type": "address"
+          "internalType": "uint32",
+          "name": "longitude",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint32",
+          "name": "latitude",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint32",
+          "name": "deviation",
+          "type": "uint32"
+        },
+        {
+          "internalType": "string",
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "city",
+          "type": "string"
         }
       ],
+      "name": "addCheckinInfo",
+      "outputs": [],
       "stateMutability": "nonpayable",
-      "type": "constructor"
+      "type": "function"
     },
     {
       "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_nonce",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint32",
+          "name": "_longitude",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint32",
+          "name": "_latitude",
+          "type": "uint32"
+        }
+      ],
+      "name": "checkin",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "checkinInfoAt",
+      "outputs": [
+        {
+          "internalType": "uint32",
+          "name": "sn",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint64",
+          "name": "timeStart",
+          "type": "uint64"
+        },
+        {
+          "internalType": "uint64",
+          "name": "timeEnd",
+          "type": "uint64"
+        },
+        {
+          "internalType": "uint32",
+          "name": "longitude",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint32",
+          "name": "latitude",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint32",
+          "name": "deviation",
+          "type": "uint32"
+        },
         {
           "internalType": "address",
           "name": "owner",
           "type": "address"
-        }
-      ],
-      "name": "OwnableInvalidOwner",
-      "type": "error"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
-        }
-      ],
-      "name": "OwnableUnauthorizedAccount",
-      "type": "error"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "previousOwner",
-          "type": "address"
         },
         {
-          "indexed": true,
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
+          "internalType": "string",
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "city",
+          "type": "string"
         }
       ],
-      "name": "OwnershipTransferred",
-      "type": "event"
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-      "inputs": [],
-      "name": "LINK",
-      "outputs": [
+      "inputs": [
         {
           "internalType": "address",
           "name": "",
           "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "checkinStatusOfAddress",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
         }
       ],
       "stateMutability": "view",
@@ -80,203 +154,11 @@
     },
     {
       "inputs": [],
-      "name": "WETH",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes",
-          "name": "checkData",
-          "type": "bytes"
-        }
-      ],
-      "name": "checkUpkeep",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        },
-        {
-          "internalType": "bytes",
-          "name": "",
-          "type": "bytes"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "dataFeed",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "tokenA",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "tokenB",
-          "type": "address"
-        },
-        {
-          "internalType": "uint32",
-          "name": "MA1",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint32",
-          "name": "MA2",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint32",
-          "name": "MAInterval",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint32",
-          "name": "executionInterval",
-          "type": "uint32"
-        }
-      ],
-      "name": "createPriceFeedOrder",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "index",
-          "type": "uint256"
-        }
-      ],
-      "name": "depositETH",
-      "outputs": [],
-      "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "dataFeed",
-          "type": "address"
-        },
-        {
-          "internalType": "uint32",
-          "name": "MA1",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint32",
-          "name": "MA2",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint32",
-          "name": "MAInterval",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint32",
-          "name": "roundIDStep",
-          "type": "uint32"
-        }
-      ],
-      "name": "getMA",
-      "outputs": [
-        {
-          "internalType": "int256",
-          "name": "valueMA1",
-          "type": "int256"
-        },
-        {
-          "internalType": "int256",
-          "name": "valueMA2",
-          "type": "int256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "len1",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "len2",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint32",
-          "name": "MA1",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint32",
-          "name": "MA2",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint32",
-          "name": "MAInterval",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint32",
-          "name": "executionInterval",
-          "type": "uint32"
-        }
-      ],
-      "name": "getParamsAddress",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "pure",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_indexStart",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_indexEnd",
-          "type": "uint256"
-        }
-      ],
-      "name": "getPriceFeedOrderListBytes",
+      "name": "getAllCheckinPoints",
       "outputs": [
         {
           "internalType": "bytes[]",
-          "name": "returnList",
+          "name": "_list",
           "type": "bytes[]"
         }
       ],
@@ -284,195 +166,26 @@
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "user",
-          "type": "address"
-        },
+      "inputs": [],
+      "name": "getBlockTimeStamp",
+      "outputs": [
         {
           "internalType": "uint256",
-          "name": "_indexStart",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_indexEnd",
+          "name": "",
           "type": "uint256"
         }
       ],
-      "name": "getUserOrderListBytes",
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getCheckinInfosByAddress",
       "outputs": [
         {
           "internalType": "bytes[]",
-          "name": "returnList",
+          "name": "_list",
           "type": "bytes[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "name": "indexOfPriceFeedOrderAt",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "name": "infosForPriceFeedAddressListAt",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "tokenA",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "tokenB",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "initialTotalAmount",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "currentTotalAmountA",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "currentTotalAmountB",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint32",
-          "name": "MA1",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint32",
-          "name": "MA2",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint32",
-          "name": "MAInterval",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint32",
-          "name": "executionInterval",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint128",
-          "name": "timeStamp",
-          "type": "uint128"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "name": "infosOfUserOrderForNonceAt",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "userInitialAmount",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "userDepositAmountA",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "userDepositAmountB",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "priceFeedAddress",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "paramsAddress",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "nonceBefore",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "nonceAfter",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "name": "initializedPriceFeedOrder",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
         }
       ],
       "stateMutability": "view",
@@ -486,256 +199,6 @@
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "name": "nonceListForAddressAt",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "name": "nonceListForPriceFeedAddressListAt",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "owner",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes",
-          "name": "performData",
-          "type": "bytes"
-        }
-      ],
-      "name": "performUpkeep",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "name": "priceFeedAddressList",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "renounceOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_add",
-          "type": "address"
-        },
-        {
-          "internalType": "bool",
-          "name": "_bool",
-          "type": "bool"
-        }
-      ],
-      "name": "setUpkeeper",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "testDepositETH",
-      "outputs": [],
-      "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "dataFeed",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "paramsAddress",
-          "type": "address"
-        },
-        {
-          "internalType": "int256",
-          "name": "valueMA1",
-          "type": "int256"
-        },
-        {
-          "internalType": "int256",
-          "name": "valueMA2",
-          "type": "int256"
-        }
-      ],
-      "name": "testGetPerformData",
-      "outputs": [
-        {
-          "internalType": "bytes",
-          "name": "",
-          "type": "bytes"
-        }
-      ],
-      "stateMutability": "pure",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "index",
-          "type": "uint256"
-        },
-        {
-          "internalType": "int256",
-          "name": "valueMA1",
-          "type": "int256"
-        },
-        {
-          "internalType": "int256",
-          "name": "valueMA2",
-          "type": "int256"
-        }
-      ],
-      "name": "testPerformUpkeep",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "transferOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "uniswapV2Factory",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "uniswapV2Router",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "name": "validUpkeeper",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
         }
       ],
       "stateMutability": "view",
