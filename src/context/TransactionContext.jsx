@@ -81,10 +81,9 @@ export function TransactionsProvider({ children }) {
         }
     }
 
-    async function onSignIn(nonce, longitude, latitude) {
+    async function onCheckIn(nonce, longitude, latitude) {
         try {
             if (ethereum) {
-                // console.log("availableTransactions: ");
                 const transactionsContract = await createEthereumContract()
                 await ethereum.request({ method: "eth_accounts" })
                 await transactionsContract.checkin(nonce, parseInt(longitude * 1000000), parseInt(latitude * 1000000))
@@ -147,7 +146,7 @@ export function TransactionsProvider({ children }) {
                 isLoading,
                 handleChange,
                 formData,
-                onSignIn,
+                onCheckIn,
                 myTransactions,
             }}
         >

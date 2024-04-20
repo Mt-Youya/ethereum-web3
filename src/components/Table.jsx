@@ -8,7 +8,7 @@ function Table() {
     const [detail, setDetail] = useState(null)
     const tableClass = "grid xl:grid-cols-[50px_minmax(200px,_1fr)_100px_100px_minmax(200px,_1fr)_minmax(200px,_1fr)_minmax(200px,_1fr)_100px] xl:gap-4 xl:py-3 xl:gap-2 py-1.5 grid-cols-[30px_minmax(100px,_1fr)_60px_60px_minmax(120px,_1fr)_minmax(120px,_1fr)_minmax(120px,_1fr)_60px]"
 
-    const { transactions, myTransactions, onSignIn } = useContext(TransactionContext)
+    const { transactions, myTransactions, onCheckIn } = useContext(TransactionContext)
     const { position } = useContext(LocationContext)
 
     function handleCheckIn(index) {
@@ -27,7 +27,7 @@ function Table() {
 
     async function handleCheckInConfirm() {
         if (position) {
-            await onSignIn(detail.sn, parseInt(position.lng * 1000000), parseInt(position.lat * 1000000))
+            await onCheckIn(detail.sn, parseInt(position.lng), parseInt(position.lat))
         } else {
             alert("Please enable location service")
         }
