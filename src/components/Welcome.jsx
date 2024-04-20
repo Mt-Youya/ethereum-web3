@@ -24,9 +24,9 @@ function Welcome() {
                 : (
                     <h1 className="text-3xl text-white font-semibold flex">
                         Welcome, <span className="truncate w-48">{currentAccount}</span>
+                        <br />
                         {position && (
                             <>
-                                <br />
                                 <span>
                                     Latitude: {position.lat} <br />
                                     Longitude: {position.lng}

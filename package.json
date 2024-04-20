@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "vite --open --host",
     "build": "vite build --mode production",
-    "preview": "vite build --mode production && vite preview --open --host"
+    "preview": "pnpm build && vite preview --open --host"
   },
   "dependencies": {
     "@amap/amap-jsapi-loader": "^1.0.1",

@@ -82,7 +82,7 @@ function Table() {
                                 <li>{li.latitude}</li>
                                 <li>{li.startTime}</li>
                                 <li>{li.endTime}</li>
-                                {li.checked === "true" && (
+                                {!li.checked && (
                                     <li>
                                         <button className={`rounded-xl bg-[#2952E3] py-1 px-2`}
                                                 onClick={() => handleCheckIn(i)}
