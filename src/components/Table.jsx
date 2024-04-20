@@ -27,7 +27,7 @@ function Table() {
 
     async function handleCheckInConfirm() {
         if (position) {
-            await onSignIn(detail.sn, parseInt(position.latitude * 1000000), parseInt(position.longitude * 1000000))
+            await onSignIn(detail.sn, parseInt(position.lng * 1000000), parseInt(position.lat * 1000000))
         } else {
             alert("Please enable location service")
         }
