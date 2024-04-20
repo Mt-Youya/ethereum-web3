@@ -55,14 +55,7 @@ function Table() {
                                 <li>{li.latitude}</li>
                                 <li>{li.startTime}</li>
                                 <li>{li.endTime}</li>
-                                <li>
-                                    <button
-                                        className={`rounded-xl bg-[#2952E3] py-1 px-2 ${li.checked && "text-gray-500"}`}
-                                        disabled={!li.checked}
-                                    >
-                                        Check-In
-                                    </button>
-                                </li>
+
                             </ul>
                         ))}
                     </div>
@@ -86,10 +79,10 @@ function Table() {
                                 <li>{li.endTime}</li>
                                 <li>
                                     <button
-                                        className="rounded-xl bg-[#2952E3] py-1 px-2"
-                                        onClick={() => handleCheckIn(i)}
+                                        className={`rounded-xl bg-[#2952E3] py-1 px-2 ${li.checked && "text-gray-500"}`}
+                                        disabled={!li.checked}
                                     >
-                                        Deposit
+                                        Check-In
                                     </button>
                                 </li>
                             </ul>
@@ -125,7 +118,7 @@ function Table() {
                         </ul>
                         <div className="flex justify-between items-center p-3">
                             <button className="rounded-2xl border border-[#37456E] p-1 " onClick={handleCheckInConfirm}>
-                                Deposit
+                                Check In
                             </button>
                             <button className="rounded-2xl border border-[#37456E] p-1 " onClick={() => setOpen(false)}>
                                 Cancel
