@@ -45,7 +45,7 @@ function Table() {
                 <div
                     className="flex w-full justify-center items-center flex-col md:p-14 md:pb-0 pt-10 px-4 text-white"
                 >
-                    <h1 className="text-center md:mb-6 mb-3 text-3xl">My Orders</h1>
+                    <h1 className="text-center md:mb-6 mb-3 text-3xl">My Check-in Points</h1>
                     <div className="min-h-52">
                         <ul className={`${tableClass} border-b-2 border-[#302D2E]`}>
                             {["SN", "Description", "City", "Latitude", "Longitude", "StartTime(UTC)", "EndTime(UTC)"].map(li => (
@@ -66,7 +66,7 @@ function Table() {
                     </div>
                 </div>
                 <div className="flex w-full justify-center items-center flex-col md:p-14 py-10 px-4 text-white">
-                    <h1 className="text-center md:mb-6 mb-3 text-3xl">Total FeedData Orders</h1>
+                    <h1 className="text-center md:mb-6 mb-3 text-3xl">All Check-in Points</h1>
                     <div className="min-h-52">
                         <ul className={`${tableClass} border-b-2 border-[#302D2E]`}>
                             {["SN", "Description", "City", "Latitude", "Longitude", "StartTime(UTC)", "EndTime(UTC)", "Action"].map(li => (

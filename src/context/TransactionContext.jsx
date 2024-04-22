@@ -57,7 +57,6 @@ export function TransactionsProvider({ children }) {
         }
     }
 
-
     async function getMyTransactions() {
         const abi = new AbiCoder()
         try {
@@ -79,7 +78,6 @@ export function TransactionsProvider({ children }) {
                     city: transactor[8],
                 })
             }
-            console.log(list)
             setMyTransactions(list)
             reloadRef.current.myLen = list.length
         } catch (e) {
@@ -95,7 +93,8 @@ export function TransactionsProvider({ children }) {
                 await ethereum.request({ method: "eth_accounts" })
                 await contract.checkin(nonce, parseInt(longitude * 1000000), parseInt(latitude * 1000000))
                 const timer = setInterval(async () => {
-                    await getMyTransactions()
+                    getMyTransactions()
+                    getAllTransactions()
                     if (len !== myTransactions.length) {
                         clearInterval(timer)
                     }
